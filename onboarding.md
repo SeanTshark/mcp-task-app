@@ -111,7 +111,7 @@ Follow **GitHub Flow**:
 
 ## **8. Development Environment Setup**
 
-- **Python 3.13+** is required.
+- **Python 3.14+** is required.
 - Install dependencies:
 
   ```bash
@@ -225,10 +225,10 @@ task-manager-cli/
 ## **19. FAQ**
 
 - **Q: How do I run tests?**  
-   A: Use the command `python -m unittest discover test`.
+   A: Use the command `pytest -v`.
 
 - **Q: How do I install dependencies?**  
-   A: Run `pip install -r requirements.txt`.
+   A: Run `pip install -r requirements-dev.txt`.
 
 ---
 

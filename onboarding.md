@@ -118,7 +118,15 @@ Follow **GitHub Flow**:
   pip install -r requirements-dev.txt
   ```
 
-or if you using uv
+  or if you would like to use `uv` for dependency management:
+
+  if you have not already installed `uv`, run:
+
+  ```bash
+  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+  ```
+
+  to install the development dependencies, run:
 
   ```bash
   uv sync --group=dev

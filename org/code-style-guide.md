@@ -20,6 +20,8 @@ These coding standards are designed for beginner Python students at North Metro 
 
      ```python
      user_name = "Sandeep"
+
+
      def calculate_total_price():
          pass
      ```
@@ -50,6 +52,7 @@ These coding standards are designed for beginner Python students at North Metro 
    ```python
    def calculate_average():
        pass
+
 
    def print_report():
        pass
@@ -90,10 +93,10 @@ These coding standards are designed for beginner Python students at North Metro 
 
    ```python
    # Correct
-   print('Hello, World!')
+   print("Hello, World!")
 
    # Incorrect
-   print ('Hello, World!')
+   print("Hello, World!")
    ```
 
 2. Use spaces around operators and after commas:
@@ -105,9 +108,9 @@ These coding standards are designed for beginner Python students at North Metro 
    numbers = [1, 2, 3, 4]
 
    # Incorrect
-   x=5
-   y=x+1
-   numbers=[1,2,3,4]
+   x = 5
+   y = x + 1
+   numbers = [1, 2, 3, 4]
    ```
 
 3. Leave two blank lines before top-level classes and functions, and one blank line before method definitions inside a class.
@@ -145,9 +148,11 @@ Boolean functions and variables represent true/false conditions. Following these
    def is_adult(age):
        return age >= 18
 
+
    def has_permission(user, action):
        # Check if the user has permission to perform the action
        pass
+
 
    def can_vote(user):
        return user.age >= VOTING_AGE and user.is_registered
@@ -175,7 +180,7 @@ Boolean functions and variables represent true/false conditions. Following these
        print("You can enter.")
 
    # For negative conditions, use 'not'
-   if not has_permission(user, 'delete'):
+   if not has_permission(user, "delete"):
        print("Access denied.")
    ```
 

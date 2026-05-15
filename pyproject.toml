@@ -66,7 +66,6 @@ select = [
   "I", # isort
   "N", # pep8-naming
   "Q", # flake8-quotes
-  "DOC", # pydoclint
   "TID", # flake8-tidy-imports
   "PLR", # Refactor
   "FURB", # refurb
@@ -75,14 +74,24 @@ select = [
   "C4", # flake8-comprehensions
   "ICN", # flake8-import-conventions
   "LOG", # flake8-logging-format
-  "T20", # flake8-print
-  "PT", # flake8-pytest-style
   "UP", # flake8-upgrade
   "RET", # flake8-return
 ]
 preview = true
 ignore = [
-  "D103", # ignore: docstring rule on every public function (may be too strict for now)
+  "D100", # Missing docstring in public module
+  "D101", # Missing docstring in public class
+  "D102", # Missing docstring in public method
+  "D103", # Missing docstring in public function
+  "D104", # Missing docstring in public package
+  "D105", # Missing docstring in magic method
+  "D106", # Missing docstring in public nested class
+  "D107", # Missing docstring in __init__
+  "D205", # 1 blank line required between summary line and description
+  "D212", # Multi-line docstring summary should start at the first line
+  "T20", # ignore: flake8-print (keep prints for now)
+  "PT", # ignore: flake8-pytest-style (keep unittest-style asserts if needed)
+  "COM812", # ignore: trailing comma conflict with formatter
 ]
 
 [tool.ruff.lint.mccabe]

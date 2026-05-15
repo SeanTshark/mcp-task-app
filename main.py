@@ -1,8 +1,8 @@
-from src.task_manager import add_task, delete_task, list_tasks
 from src.file_handler import load_tasks
+from src.task_manager import add_task, delete_task, list_tasks
 
 
-def main():
+def main():  # noqa: PLR0915
     tasks = load_tasks()
     while True:
         print("\nTask Manager CLI")

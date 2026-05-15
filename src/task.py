@@ -1,6 +1,5 @@
 class Task:
-    """
-    A class to represent a task in the task management application.
+    """A class to represent a task in the task management application.
 
     Attributes:
         title (str): The title of the task.
@@ -10,8 +9,7 @@ class Task:
     """
 
     def __init__(self, title, description, due_date, status="pending"):
-        """
-        Initialise a Task object with title, description, due date, and status.
+        """Initialise a Task object with title, description, due date, and status.
 
         Args:
             title (str): The title of the task.
@@ -25,8 +23,7 @@ class Task:
         self.status = status
 
     def to_dict(self):
-        """
-        Convert the Task object into a dictionary representation.
+        """Convert the Task object into a dictionary representation.
 
         Returns:
             dict: A dictionary containing the task details with keys:
@@ -36,13 +33,12 @@ class Task:
             "title": self.title,
             "description": self.description,
             "due_date": self.due_date,
-            "status": self.status
+            "status": self.status,
         }
 
     @staticmethod
     def from_dict(task_data):
-        """
-        Create a Task object from a dictionary representation.
+        """Create a Task object from a dictionary representation.
 
         Args:
             task_data (dict): A dictionary with keys:'title', 'description',
@@ -55,5 +51,5 @@ class Task:
             task_data["title"],
             task_data["description"],
             task_data["due_date"],
-            task_data.get("status", "pending")
+            task_data.get("status", "pending"),
         )

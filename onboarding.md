@@ -1,3 +1,5 @@
+# Onboarding
+
 ## Table of Contents
 
 1. Introduction
@@ -79,6 +81,7 @@ Follow **GitHub Flow**:
    ```
 
 5. **Push and Open PRs**:
+
    ```bash
    git push -u origin <branch-name>
    ```
@@ -108,14 +111,30 @@ Follow **GitHub Flow**:
 
 ## **8. Development Environment Setup**
 
-- **Python 3.9+** is required.
+- **Python 3.14+** is required.
 - Install dependencies:
+
   ```bash
-  pip install -r requirements.txt
+  pip install -r requirements-dev.txt
   ```
+
+  or if you would like to use `uv` for dependency management:
+
+  if you have not already installed `uv`, run:
+
+  ```bash
+  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+  ```
+
+  to install the development dependencies, run:
+
+  ```bash
+  uv sync --group=dev
+  ````
+
 - Recommended tools:
   - IDE: PyCharm or Visual Studio Code.
-  - Linter: `flake8` for PEP8 compliance.
+  - Linter: `flake8` or `ruff` for PEP8 compliance.
 
 ---
 
@@ -138,7 +157,7 @@ Follow **GitHub Flow**:
 
 ## **11. Project Structure**
 
-```
+```txt
 task-manager-cli/
 │
 ├── src/                       # Source code
@@ -199,8 +218,8 @@ task-manager-cli/
 
 ## **17. Contacts**
 
-- **Lecturer/Reviewer**: Jamie Robertson (jamie.robertson@example.com)
-- **DevOps Admin**: Aarav Patel (aarav.patel@example.com)
+- **Lecturer/Reviewer**: Jamie Robertson (<jamie.robertson@example.com>)
+- **DevOps Admin**: Aarav Patel (<aarav.patel@example.com>)
 
 ---
 
@@ -214,10 +233,10 @@ task-manager-cli/
 ## **19. FAQ**
 
 - **Q: How do I run tests?**  
-   A: Use the command `python -m unittest discover test`.
+   A: Use the command `pytest -v`.
 
 - **Q: How do I install dependencies?**  
-   A: Run `pip install -r requirements.txt`.
+   A: Run `pip install -r requirements-dev.txt`.
 
 ---
 

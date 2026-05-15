@@ -1,12 +1,15 @@
+"""Tests for file handler operations."""
+
 from pprint import pprint
+
 from src.file_handler import load_tasks, save_tasks
 from src.task import Task
 
 
 def test_file_handler():
-    """
-    Test the binary file content by loading tasks
-    and printing them in a readable format.
+    """Test the binary file content by loading tasks and printing them.
+
+    Loads tasks from the binary file and prints them in a readable format.
     """
     # Load tasks from the binary file
     tasks = load_tasks()

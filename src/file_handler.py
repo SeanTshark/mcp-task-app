@@ -1,12 +1,11 @@
-import pickle
 import os
+import pickle
 
 TASK_FILE = "tasks.bin"
 
 
 def load_tasks():
-    """
-    Load tasks from a binary file using the pickle module.
+    """Load tasks from a binary file using the pickle module.
 
     Returns:
         list: A list of Task objects loaded from the binary file.
@@ -19,8 +18,7 @@ def load_tasks():
 
 
 def save_tasks(tasks):
-    """
-    Save a list of tasks to a binary file using the pickle module.
+    """Save a list of tasks to a binary file using the pickle module.
 
     Args:
         tasks (list): A list of Task objects to be saved to the file.

@@ -1,11 +1,11 @@
-from src.task import Task
-from src.file_handler import save_tasks
 from datetime import datetime
+
+from src.file_handler import save_tasks
+from src.task import Task
 
 
 def add_task(tasks, title, description, due_date):
-    """
-    Add a new task to the task list.
+    """Add a new task to the task list.
 
     Args:
         tasks (list): The list of existing Task objects.
@@ -40,8 +40,7 @@ def add_task(tasks, title, description, due_date):
 
 
 def delete_task(tasks, title):
-    """
-    Delete a task from the task list based on its title.
+    """Delete a task from the task list based on its title.
 
     Args:
         tasks (list): The list of existing Task objects.
@@ -62,8 +61,7 @@ def delete_task(tasks, title):
 
 
 def list_tasks(tasks, status=None):
-    """
-    Display tasks in the task list, optionally filtered by status.
+    """Display tasks in the task list, optionally filtered by status.
 
     Args:
         tasks (list): The list of existing Task objects.
@@ -97,8 +95,7 @@ def list_tasks(tasks, status=None):
 
 
 def filter_tasks_by_status(tasks, status):
-    """
-    Filter tasks by their status.
+    """Filter tasks by their status.
 
     Args:
         tasks (list): The list of existing Task objects.

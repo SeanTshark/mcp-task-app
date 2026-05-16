@@ -1,4 +1,4 @@
-name: MCP pytest
+name: Python MCP CI
 
 on:
   push:

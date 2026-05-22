@@ -200,7 +200,7 @@ example_llm_client/
 
 ## Contributing
 
-For detailed contribution guidelines, see `CONTRIBUTION.md`.
+For detailed contribution guidelines, see [CONTRIBUTION.md](CONTRIBUTION.md).
 
 
 

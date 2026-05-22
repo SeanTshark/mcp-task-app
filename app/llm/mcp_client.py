@@ -8,9 +8,6 @@ import mcp.types
 class MCPClient:
     """
     A stubbed client for the Model Context Protocol (MCP).
-
-    In this example phase, tool execution is performed manually via curl
-    to keep the orchestration logic simple and educational.
     """
 
     def __init__(self, base_url: str):

@@ -65,3 +65,46 @@ async def test_generate_content_success():
 
         assert response.usage_metadata is not None
         assert response.usage_metadata.total_token_count == expected_token_count
+
+
+@pytest.mark.asyncio
+async def test_stream_generate_content_success():
+    """Verify streaming content generation with mocked SSE stream."""
+    # Mock data chunks (must include required 'role')
+    chunks = [
+        {
+            "candidates": [
+                {"content": {"role": "model", "parts": [{"text": "Part 1 "}]}}
+            ]
+        },
+        {"candidates": [{"content": {"role": "model", "parts": [{"text": "Part 2"}]}}]},
+    ]
+
+    class MockSSEEvent:
+        def __init__(self, data):
+            self.data = json.dumps(data)
+
+    async def mock_aiter_sse():
+        for chunk in chunks:
+            await asyncio.sleep(0)  # Use async feature to satisfy RUF029
+            yield MockSSEEvent(chunk)
+
+    mock_event_source = AsyncMock()
+    mock_event_source.aiter_sse = mock_aiter_sse
+
+    # We patch aconnect_sse context manager
+    with patch("app.llm.gemini_client.aconnect_sse") as mock_aconnect:
+        mock_aconnect.return_value.__aenter__.return_value = mock_event_source
+
+        client = GeminiClient(api_key="fake-key")
+        request = GenerateContentRequest(
+            contents=[Content(role=Role.USER, parts=[TextPart(text="Stream me")])]
+        )
+
+        results = []
+        async for response in client.stream_generate_content(request):
+            part = response.candidates[0].content.parts[0]
+            if is_text_part(part):
+                results.append(part.text)
+
+        assert results == ["Part 1 ", "Part 2"]

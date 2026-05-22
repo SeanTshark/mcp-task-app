@@ -6,9 +6,7 @@ import mcp.types
 
 
 class MCPClient:
-    """
-    A stubbed client for the Model Context Protocol (MCP).
-    """
+    """A stubbed client for the Model Context Protocol (MCP)."""
 
     def __init__(self, base_url: str):
         self.base_url = base_url

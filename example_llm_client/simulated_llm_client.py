@@ -2,71 +2,116 @@ from __future__ import annotations
 
 import asyncio
 import os
+from typing import Any
 
 from dotenv import load_dotenv
 
+from app.llm.gemini_client import GeminiClient
+from app.models.gemini_models import (
+    GenerateContentRequest,
+    is_function_call_part,
+    is_text_part,
+)
+
 load_dotenv()
 
-LLM_API_KEY = "api_key"
-LL_MODEL = "llm_model"
-MCP_SERVER_URL = os.getenv("MCP_SERVER_URL", "http://localhost:8003/mcp")
-
-KM_TO_MILES_TOOL = "kilometers_to_miles"
+# Basic Setup
+API_KEY = os.getenv("GEMINI_API_KEY")
+MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
 
-def require_env(value: str | None, name: str) -> str:
-    if value is None:
-        raise ValueError(f"Missing required environment variable: {name}")
-    return value
+def get_available_tools() -> list[dict[str, Any]]:
+    """Define the tools available to Gemini."""
+    return [
+        {
+            "function_declarations": [
+                {
+                    "name": "miles_to_kilometers",
+                    "description": "Convert miles to kilometers",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {"miles": {"type": "number"}},
+                        "required": ["miles"],
+                    },
+                }
+            ]
+        }
+    ]
 
 
-def handle_mcp_progress() -> None:
-    """Print MCP progress notifications so they are visible during the demo."""
-    return
+async def perform_initial_turn(
+    client: GeminiClient, query: str
+) -> tuple[list[Any], Any]:
+    """Execute the first turn and return the message history and model response."""
+    messages: list[Any] = [{"role": "user", "parts": [{"text": query}]}]
+    tools = get_available_tools()
+
+    print("\n[Thinking...]")
+    response = await client.generate_content(
+        GenerateContentRequest(contents=messages, tools=tools)  # type: ignore
+    )
+    return messages, response.candidates[0].content
 
 
-def call_mcp_tool():
-    """
-    Send an MCP request to the existing converter MCP server and return its response.
+def handle_manual_tool_call(call: Any) -> dict[str, Any]:
+    """Prompt the user for manual tool execution and return the formatted response."""
+    print(f"\n[Tool Requested: {call.name}]")
+    print("\n--- ACTION REQUIRED ---")
+    print(
+        f"Run: curl -X POST http://localhost:8003/miles-to-kilometers -d '{call.args}'"
+    )
 
-    The calculation happens on the MCP server. This client only orchestrates the
-    request/response flow and forwards the structured tool result to Gemini.
-    """
-    return {}
+    mcp_result = input("Enter the 'result' from the tool: ")
 
-
-def build_gemini_prompt():
-    """
-    Build the model-side context sent to Gemini.
-
-    This reuses the existing explain_conversion_prompt helper so the LLM
-    client follows the same teaching prompt pattern as the MCP prompt module.
-    LLM receives the verified MCP response after the tool call completes.
-    LLM explains the result, but it is not asked to perform the calculation.
-    """
-    return ""
-
-
-def generate_ll_explanation() -> str:
-    """Check fro streamable content from LLM output and return the combined explanation text."""
-    return ""
+    return {
+        "role": "model",
+        "parts": [
+            {
+                "functionResponse": {
+                    "name": call.name,
+                    "response": {"result": mcp_result},
+                }
+            }
+        ],
+    }
 
 
 async def run() -> None:
-    """
-    Run the LLM + MCP integration demo.
+    """The main execution pipeline for the Gemini + MCP example."""
+    if not API_KEY:
+        print("Error: GEMINI_API_KEY not found in .env")
+        return
 
-    Workflow:
-    1. Send a request to the MCP server at MCP_SERVER_URL.
-    2. Receive a structured MCP tool result back into this client.
-    3. Send that result to Gemini for explanation only.
-    """
+    client = GeminiClient(api_key=API_KEY, model_name=MODEL)
 
+    print("--- Gemini MCP Simple Example ---")
+    user_query = input("User: ")
 
-def main() -> None:
-    # Leave as asynchorous
-    asyncio.run(run())
+    # 1. Start the conversation
+    messages, model_turn = await perform_initial_turn(client, user_query)
+
+    # 2. Process any tool requests
+    for part in model_turn.parts:
+        if is_function_call_part(part):
+            tool_res_message = handle_manual_tool_call(part.function_call)
+
+            messages.extend([model_turn.model_dump(by_alias=True), tool_res_message])
+
+            # 3. Get the final explanation
+            print("\n[Explaining...]")
+            final_resp = await client.generate_content(
+                GenerateContentRequest(contents=messages)
+            )
+            final_part = final_resp.candidates[0].content.parts[0]
+
+            if is_text_part(final_part):
+                print(f"\nGemini: {final_part.text}")
+            return
+
+    # If no tool was requested, just show the response
+    if model_turn.parts and is_text_part(model_turn.parts[0]):
+        print(f"\nGemini: {model_turn.parts[0].text}")
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())

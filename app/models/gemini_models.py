@@ -40,7 +40,15 @@ class InlineDataPart(BaseModel):
     inline_data: InlineData = Field(..., alias="inlineData")
 
 
-# Python 3.14 Runtime Type Narrowing Helpers
+# Use Pydantic V2 Annotated Union with left-to-right matching,
+# Since Gemini parts are mutually exclusive keys (can change in the future)
+Part = Annotated[
+    TextPart | FunctionCallPart | FunctionResponsePart | InlineDataPart,
+    Field(union_mode="left_to_right"),
+]
+
+
+# Runtime Type Narrowing Helpers 
 def is_text_part(part: Part) -> TypeIs[TextPart]:
     return hasattr(part, "text")
 
@@ -51,14 +59,6 @@ def is_function_call_part(part: Part) -> TypeIs[FunctionCallPart]:
 
 def is_function_response_part(part: Part) -> TypeIs[FunctionResponsePart]:
     return hasattr(part, "function_response")
-
-
-# Use Pydantic V2 Annotated Union with left-to-right matching,
-# Since Gemini parts are mutually exclusive keys (can change in the future)
-Part = Annotated[
-    TextPart | FunctionCallPart | FunctionResponsePart | InlineDataPart,
-    Field(union_mode="left_to_right"),
-]
 
 
 class Content(BaseModel):
@@ -76,6 +76,8 @@ class FunctionDeclaration(BaseModel):
 
 
 class Tool(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     function_declarations: list[FunctionDeclaration] = Field(
         default_factory=list, alias="functionDeclarations"
     )

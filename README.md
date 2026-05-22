@@ -1,6 +1,6 @@
 # Converter API + MCP
 
-- builds the FastAPI app, wraps it with FastMCP, mounts MCP HTTP endpoints, registers resources and prompts, and starts uvicorn.
+- builds the FastAPI app, wraps it with FastMCP, mounts MCP HTTP/SSE endpoints, registers resources and prompts, and starts uvicorn.
 - requirements.txt - Python dependencies.
 
 ## System Architecture
@@ -78,10 +78,10 @@ The `.env` file is ignored by git, so your API key should stay local and should 
 ```bash
 # start the server
 
-# with Python (recommended)
+# with Python 
 python -m main
 
-# with UV (install in work in progress)
+# with UV (recommended)
 uv run main.py
 
 # with just
@@ -92,12 +92,12 @@ just run
 
 You'll see:
 
-- Swagger UI: http://localhost:8003/docs
-- ReDoc: http://localhost:8003/redoc
+- Swagger UI: <http://localhost:8003/docs>
+- ReDoc: <http://localhost:8003/redoc>
 
 MCP endpoints served by FastMCP:
 
-- streamable-http: http://localhost:8003/mcp
+- streamable-http: <http://localhost:8003/mcp>
 
 Each endpoint returns JSON like:
 
@@ -131,7 +131,7 @@ Our server doesn't require auth yet, we can omit the **Authorization** header.
 }
 ```
 
-3. From the MCP client, list artifacts. You should see:
+1. From the MCP client, list artifacts. You should see:
    - Tools: celsius_to_fahrenheit, fahrenheit_to_celsius, kilometers_to_miles, miles_to_kilometers
    - Resources: resource://unit_reference, resource://troubleshooting_guide
    - Prompts: explain_conversion, api_usage
@@ -139,7 +139,7 @@ Our server doesn't require auth yet, we can omit the **Authorization** header.
 ## Inspect with the npm MCP Inspector
 
 - explore everything (tools, resources, prompts) in a browser.
-- with the server already running on http://localhost:8003
+- with the server already running on <http://localhost:8003>
 
 ```bash
 # If env error appears
@@ -202,8 +202,6 @@ example_llm_client/
 
 For detailed contribution guidelines, see [CONTRIBUTION.md](CONTRIBUTION.md).
 
-
-
 ## Handling errors
 
 - Parse error (-32700)
@@ -217,6 +215,7 @@ For detailed contribution guidelines, see [CONTRIBUTION.md](CONTRIBUTION.md).
 **To run test curl commands see `app/docs/curl_testing/mcp_curl_test_examples.md`.**
 
 macOS/Linux (bash/zsh)
+
 - The examples above will work as-is.
 
 ```bash
@@ -230,3 +229,40 @@ Windows CMD
 ```bash
 curl -s -X POST http://localhost:8003/mcp/ -H "Content-Type: application/json" -d "{\"jsonrpc\":\"2.0\",\"method\":\"prompts/list\",\"params\":{},\"id\":1}"
 ```
+
+---
+
+## Tool Installation Notes
+
+### Just Command Runner (Recommended)
+
+This project uses `just` to simplify common tasks like running the server and tests.
+
+### Recommended Installation
+
+```bash
+# Using UV (Any platform)
+uv tool install rust-just
+```
+
+#### Windows
+
+```powershell
+# Using WinGet (Native)
+winget install --id Casey.Just --exact
+
+# Using Scoop
+scoop install just
+
+# Using Chocolatey
+choco install just
+```
+
+#### macOS
+
+```bash
+# Using Homebrew (macOS)
+brew install just
+```
+
+Once installed, simply run `just` in your terminal to see all available commands.

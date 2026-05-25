@@ -6,8 +6,9 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from app.llm.gemini_client import GeminiClient
-from app.models.gemini_models import (
+from app.llm.base import LLMRequest
+from app.llm.providers.gemini.client import GeminiClient
+from app.llm.providers.gemini.models import (
     Content,
     GenerateContentRequest,
     Role,
@@ -26,6 +27,36 @@ def test_build_url_property(method_name):
     url = client._build_url(method_name)
     assert f":{method_name}" in url
     assert f"key={api_key}" in url
+
+
+@pytest.mark.asyncio
+async def test_generate_success():
+    """Verify the provider-agnostic generate method."""
+    mock_response_data = {
+        "candidates": [
+            {"content": {"role": "model", "parts": [{"text": "Agnostic response"}]}}
+        ],
+        "usageMetadata": {
+            "promptTokenCount": 5,
+            "candidatesTokenCount": 5,
+            "totalTokenCount": 10,
+        },
+    }
+
+    from unittest.mock import Mock
+
+    mock_resp = Mock()
+    mock_resp.json.return_value = mock_response_data
+    mock_resp.status_code = 200
+    mock_resp.raise_for_status = Mock()
+
+    with patch("httpx.AsyncClient.post", return_value=mock_resp):
+        client = GeminiClient(api_key="fake-key")
+        request = LLMRequest(prompt="Hello")
+
+        response = await client.generate(request)
+
+        assert response.text == "Agnostic response"
 
 
 @pytest.mark.asyncio
@@ -93,7 +124,7 @@ async def test_stream_generate_content_success():
     mock_event_source.aiter_sse = mock_aiter_sse
 
     # We patch aconnect_sse context manager
-    with patch("app.llm.gemini_client.aconnect_sse") as mock_aconnect:
+    with patch("app.llm.providers.gemini.client.aconnect_sse") as mock_aconnect:
         mock_aconnect.return_value.__aenter__.return_value = mock_event_source
 
         client = GeminiClient(api_key="fake-key")

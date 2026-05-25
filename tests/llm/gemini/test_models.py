@@ -1,7 +1,7 @@
 from hypothesis import given
 from hypothesis import strategies as st
 
-from app.models.gemini_models import (
+from app.llm.providers.gemini.models import (
     Content,
     FunctionCall,
     FunctionCallPart,

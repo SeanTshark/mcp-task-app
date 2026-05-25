@@ -38,6 +38,11 @@ class GeminiClient(BaseLLMClient):
         self.model_name = model_name
         self.base_url = base_url.rstrip("/")
 
+    @property
+    def provider_name(self) -> str:
+        """The human-readable name of the provider."""
+        return "Google Gemini"
+
     def _build_url(self, method: str) -> str:
         """Construct the REST URL for a specific model method."""
         # Note: We append the API key here, but avoid logging the full URL in case of error
@@ -71,6 +76,33 @@ class GeminiClient(BaseLLMClient):
             raise LLMProviderError(f"Gemini API request failed: {error_msg}") from e
         except Exception as e:
             raise LLMProviderError(f"An unexpected error occurred: {e}") from e
+
+    async def stream(self, request: LLMRequest) -> AsyncGenerator[LLMResponse]:
+        """
+        Implementation of the StreamingLLMClient interface.
+        Translates a generic LLMRequest into a Gemini-specific streaming request.
+        """
+        gemini_request = GenerateContentRequest(
+            contents=[Content(role=Role.USER, parts=[TextPart(text=request.prompt)])]
+        )
+
+        try:
+            async for chunk in self.stream_generate_content(gemini_request):
+                if not chunk.candidates:
+                    continue
+
+                first_part = chunk.candidates[0].content.parts[0]
+                text = first_part.text if is_text_part(first_part) else ""
+
+                yield LLMResponse(text=text, raw_response=chunk)
+
+        except httpx.HTTPError as e:
+            error_msg = str(e).replace(self.api_key, "REDACTED")
+            raise LLMProviderError(f"Gemini API streaming failed: {error_msg}") from e
+        except Exception as e:
+            raise LLMProviderError(
+                f"An unexpected error occurred during stream: {e}"
+            ) from e
 
     async def generate_content(
         self,

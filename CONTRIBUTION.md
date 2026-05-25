@@ -42,8 +42,12 @@ Before opening a Pull Request (PR):
 
 1. Read the README, SPEC and all documentation
 2. Check existing Issues and Discussions
-3. Open a discussion for large changes
-4. Keep contributions focused and incremental
+3. Ask to be assigned to an issue
+4. Follow the templates for both Issues and PRs
+5. Open a discussion for large changes
+6. Keep contributions focused and incremental
+
+**Contributors whose work does not follow this flow will not be reviewed**
 
 ---
 

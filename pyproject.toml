@@ -22,7 +22,7 @@ dependencies = [
   "pydantic>=2.13.4",
   "result-pattern>=0.2.2",
   "python-dateutil>=2.8",
-  "sqlalchemy<=2.0.50",
+  "sqlalchemy>=2.0.50",
 ]
 
 [dependency-groups]

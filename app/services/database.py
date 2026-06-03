@@ -1,6 +1,6 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from fastapi import HTTPException
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
 Database_url = "sqlite:///./Database.db"
 Engine = create_engine(Database_url, connect_args={"check_same_thread": False})
@@ -14,7 +14,7 @@ class DataBaseMethods:
     an in Memory Database Engine and
     allows the creation of new data objects,
     as well as finding objects saved through
-    the ID or Name
+    the ID or Name.
 
     Args:
         None
@@ -27,7 +27,7 @@ class DataBaseMethods:
     @staticmethod
     def add_object(db: Session, new_object):
         """
-        Adds a database object to the database
+        Adds a database object to the database.
 
         Args:
             db (Session): Database session,
@@ -47,22 +47,20 @@ class DataBaseMethods:
             db.commit()
             db.refresh(new_object)
             return new_object
-        except Exception:
+        except Exception as err:
             db.rollback()
             raise HTTPException(status_code=404,
-                                detail="Object already exists")
+                                detail="Object already exists") from err
 
     # deletes a data object from database
     @staticmethod
     def delete_object(db: Session, object_to_delete):
         """
-        Deletes a database object from the database
+        Deletes a database object from the database.
 
         Args:
-            db (Session): Database session,
-            can be grabbed with get_db()
-            object_to_delete (database_objects):
-            New database object to be added
+            db (Session): Database session, can be grabbed with get_db()
+            object_to_delete (database_objects): New database object to be added
             must be inside the database_objects.py module
 
         Returns:
@@ -75,23 +73,21 @@ class DataBaseMethods:
             db.delete(object_to_delete)
             db.commit()
             return True
-        except Exception as e:
+        except Exception as err:
             db.rollback()
             raise HTTPException(status_code=404,
-                                detail=f"Object does not exist, {e}")
+                                detail=f"Object does not exist, {err}") from err
 
     # Gets an object by Name from the database
     @staticmethod
     def get_object_by_name(db: Session, obj_ref, name: str):
         """
-        Gets an object based on the name entered
+        Gets an object based on the name entered.
 
         Args:
-            db (Session): Database session,
-            can be grabbed with get_db()
+            db (Session): Database session, can be grabbed with get_db()
             name (string): Name of the object
-            obj_ref (database_objects): Object reference,
-            so an object from
+            obj_ref (database_objects): Object reference, so an object from
             the database_objects.py module
 
         Returns:
@@ -102,7 +98,7 @@ class DataBaseMethods:
                                 detail="Object must have a name")
 
         try:
-            param = getattr(obj_ref, "name")
+            param = obj_ref.name
             return db.query(obj_ref).filter(param == name).first()
         except Exception:
             HTTPException(status_code=404,
@@ -112,7 +108,7 @@ class DataBaseMethods:
     @staticmethod
     def get_object_by_id(db: Session, obj_ref, object_id: int):
         """
-        Gets an object based on the id entered
+        Gets an object based on the id entered.
 
         Args:
             db (Session): Database session, can be grabbed with get_db()
@@ -124,7 +120,7 @@ class DataBaseMethods:
             database_object: returns the object if it was successfully found
         """
         try:
-            param = getattr(obj_ref, "id")
+            param = obj_ref.id
             return db.query(obj_ref).filter(param == object_id).first()
         except Exception:
             HTTPException(status_code=404,
@@ -134,7 +130,7 @@ class DataBaseMethods:
     def query_db(db: Session, obj_ref, field: str, value):
         if value is None:
             try:
-                return db.query(obj_ref).filter(getattr(obj_ref, "id")).all()
+                return db.query(obj_ref).filter(obj_ref.id).all()
             except Exception:
                 HTTPException(status_code=404,
                               detail=f"Object with filed: {field},"

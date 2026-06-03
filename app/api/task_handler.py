@@ -1,41 +1,38 @@
-from sqlalchemy.orm import Session
-from fastapi import HTTPException
+from datetime import datetime
 
+from fastapi import HTTPException
+from sqlalchemy.orm import Session
+
+from app.data.database_objects import DBTask
 from app.data.pydantic_objects import PLTask
 from app.services.database import DataBaseMethods
-from app.data.database_objects import DBTask
-from datetime import datetime
 
 
 class TaskHandler:
     """
     Task Handler class manages the creation, deleting & finding of tasks.
     This class uses only TaskMethods so creating an instance of this class
-    isn't required
-
-    Returns:
-        None
+    isn't required.
 
     Args:
+        None
+
+    Returns:
         None
     """
 
     @classmethod
     def create_task(cls, name: str, _type: str,
                     description: str, completed: bool = False) -> PLTask:
-        task = PLTask(name=name,
+        return PLTask(name=name,
                       type=_type,
                       description=description,
                       completed=completed)
 
-        return task
-
     # creates a task with curl content
     @classmethod
     def add_task_to_db(cls, db: Session, task: PLTask):
-        """
-        Creates a task and adds it to the misc
-        """
+        """Creates a task and adds it to the misc."""
         print(db)
         new_task_obj = DBTask(id=task.id or None,
                               name=task.name,
@@ -71,7 +68,7 @@ class TaskHandler:
     @classmethod
     def get_task(cls, db, name: str | int):
         """
-        This method gets a task by either it's name or id
+        This method gets a task by either it's name or id.
 
         Args:
             db (Session): Session
@@ -88,12 +85,12 @@ class TaskHandler:
             raise Exception("Name must be int or str")
 
         if dbtask:
+            # makes sure that the returned task is a pydantic object
             return cls.__from_db_to_pl(dbtask)
-        else:
-            return False
+        return False
 
     @classmethod
-    def list_tasks(cls, db: Session, _type: str = None):
+    def list_tasks(cls, db: Session, _type: str | None = None):
 
         tasks = DataBaseMethods.query_db(db, DBTask, "type", _type)
         new_list = []
@@ -117,8 +114,9 @@ class TaskHandler:
 
                 db.commit()
                 return task
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
+            except Exception as err:
+                raise HTTPException(status_code=500,
+                                    detail=str(err)) from err
         else:
             raise HTTPException(status_code=404, detail="Task not found")
 
@@ -127,9 +125,8 @@ class TaskHandler:
         if task.task_started and task.task_ended:
             time_elapsed = task.task_ended - task.task_started
             return time_elapsed.total_seconds()
-        else:
-            raise HTTPException(status_code=500,
-                                detail="Task hasn't finished running")
+        raise HTTPException(status_code=500,
+                            detail="Task hasn't finished running")
 
     @classmethod
     def __from_db_to_pl(cls, dbtask: DBTask):
@@ -141,7 +138,3 @@ class TaskHandler:
             completed=dbtask.completed,
             task_started=dbtask.task_started,
         )
-
-
-if __name__ == "__main__":
-    pass

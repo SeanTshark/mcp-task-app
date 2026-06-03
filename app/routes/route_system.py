@@ -4,6 +4,7 @@ import platform
 import time
 
 from app.routes.router_handler import Router
+
 system_router = Router.get_router("system")
 
 started_at = time.time()

@@ -1,10 +1,9 @@
 import unittest
 
-from app.services.database import LocalSession, clear_table
-from app.data.pydantic_objects import PLTask
 from app.api.task_handler import TaskHandler
 from app.data.database_objects import DBTask
-
+from app.data.pydantic_objects import PLTask
+from app.services.database import LocalSession, clear_table
 
 
 class TaskTests(unittest.TestCase):
@@ -12,7 +11,7 @@ class TaskTests(unittest.TestCase):
     def setUp(self):
         self.session = LocalSession()
         self.example_pltasks = [
-            PLTask(name="Task1", type="Agriculture", description="Give names for 100 plants",completed=False),
+            PLTask(name="Task1", type="Agriculture", description="Give names for 100 plants", completed=False),
             PLTask(name="Task2", type="Construction", description="Give price for new airport", completed=True)
         ]
         self.example_dbtask = [
@@ -29,24 +28,24 @@ class TaskTests(unittest.TestCase):
 
     def test_adding_task_to_db(self):
         clear_table(self.session, DBTask)
-        self.assertEqual(self.example_dbtask[0],TaskHandler.add_task_to_db(self.session, self.example_pltasks[0]))
-        self.assertEqual(self.example_dbtask[1],TaskHandler.add_task_to_db(self.session, self.example_pltasks[1]))
+        self.assertEqual(self.example_dbtask[0], TaskHandler.add_task_to_db(self.session, self.example_pltasks[0]))
+        self.assertEqual(self.example_dbtask[1], TaskHandler.add_task_to_db(self.session, self.example_pltasks[1]))
 
     def test_finding_task_by_name(self):
         clear_table(self.session, DBTask)
         TaskHandler.add_task_to_db(self.session, self.example_pltasks[0])
         TaskHandler.add_task_to_db(self.session, self.example_pltasks[1])
 
-        self.assertEqual(self.example_dbtask[0],TaskHandler.get_task(self.session, "Task1"))
-        self.assertEqual(self.example_dbtask[1],TaskHandler.get_task(self.session, "Task2"))
+        self.assertEqual(self.example_dbtask[0], TaskHandler.get_task(self.session, "Task1"))
+        self.assertEqual(self.example_dbtask[1], TaskHandler.get_task(self.session, "Task2"))
 
     def test_finding_task_by_id(self):
         clear_table(self.session, DBTask)
         TaskHandler.add_task_to_db(self.session, self.example_pltasks[0])
         TaskHandler.add_task_to_db(self.session, self.example_pltasks[1])
 
-        self.assertEqual(self.example_dbtask[0],TaskHandler.get_task(self.session, 1))
-        self.assertEqual(self.example_dbtask[1],TaskHandler.get_task(self.session, 2))
+        self.assertEqual(self.example_dbtask[0], TaskHandler.get_task(self.session, 1))
+        self.assertEqual(self.example_dbtask[1], TaskHandler.get_task(self.session, 2))
 
     def test_deleting_tasks(self):
         clear_table(self.session, DBTask)
@@ -75,13 +74,10 @@ class TaskTests(unittest.TestCase):
         task = TaskHandler.complete_task(self.session, task)
 
         etask = self.example_dbtask[0]
-        etask.completed=True
-        etask.task_ended=task.task_ended
+        etask.completed = True
+        etask.task_ended = task.task_ended
         self.assertEqual(etask, task)
 
 
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

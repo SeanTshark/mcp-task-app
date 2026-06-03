@@ -3,20 +3,14 @@
 
 # Create Database
 
-from fastapi import APIRouter, FastAPI, Depends, HTTPException
+from fastapi import APIRouter, FastAPI
 from fastmcp import FastMCP
 
-from app.data.pydantic_objects import PLTask
 from app.mcp.mcp_prompts.converter_prompts import explain_conversion_prompt
 from app.mcp.mcp_resources.converter_resources import RESOURCE_DEFINITIONS
 from app.mcp.mcp_tools.miles_to_km import router as mile_to_km
-from app.utils.resource_utils import register_resources
 from app.routes.router_handler import Router
-from app.services.database import DataBaseMethods
-from sqlalchemy.orm import Session
-from app.api.task_handler import TaskHandler
-
-
+from app.utils.resource_utils import register_resources
 
 # FastAPI app for plain HTTP
 app = FastAPI(

@@ -1,7 +1,7 @@
-import os
 import inspect
+import os
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
-from importlib.util import spec_from_file_location, module_from_spec
 
 from fastapi import APIRouter, HTTPException
 
@@ -15,7 +15,7 @@ class Router:
 
     @classmethod
     def load_all_routes(cls):
-        for root, dirs, files in os.walk("app/routes"):
+        for root, _dirs, files in os.walk("app/routes"):
             for file in files:
 
                 file_path = os.path.join(root, file)
@@ -48,10 +48,12 @@ class Router:
         if "router" in router_name:
             try:
                 return getattr(cls, router_name)
-            except ModuleNotFoundError:
-                raise HTTPException(status_code=404, detail="Router not found")
+            except ModuleNotFoundError as err:
+                raise HTTPException(status_code=404,
+                                    detail="Router not found") from err
         else:
             try:
                 return getattr(cls, router_name + "_router")
-            except ModuleNotFoundError:
-                raise HTTPException(status_code=404, detail="Router not found")
+            except ModuleNotFoundError as err:
+                raise HTTPException(status_code=404,
+                                    detail="Router not found") from err

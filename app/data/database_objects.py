@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from datetime import datetime
+
+from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.dialects.mysql import DATETIME
 
 from app.services.database import Base, Engine
-from datetime import datetime
 
 
 # DBTask stands for Data Base Task
@@ -15,7 +16,7 @@ class DBTask(Base):
     description = Column(String(1000), nullable=True)
     completed = Column(Boolean(), nullable=True, default=False)
     task_started = Column(DATETIME(), nullable=True, default=datetime.now())
-    task_ended = Column(DATETIME(), nullable=True,)
+    task_ended = Column(DATETIME(), nullable=True)
 
 
 class DBTestObject(Base):

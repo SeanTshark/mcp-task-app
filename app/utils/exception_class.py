@@ -1,120 +1,130 @@
 class HttpExceptionError(Exception):
     def __init__(self, status_code):
-        self.status_code = object
+        self.status_code = status_code
 
 
 def http_exception_error(status_code):
+    # HTTP 100 Error Codes
     if status_code == 100:
         pass
-    if status_code == 101:
+    elif status_code == 101:
         pass
-    if status_code == 102:
+    elif status_code == 102:
         pass
-    if status_code == 103:
+    elif status_code == 103:
         pass
-    if status_code == 300:
+
+    # HTTP 300 Error Codes
+    elif status_code == 300:
         pass
-    if status_code == 301:
+    elif status_code == 301:
         pass
-    if status_code == 302:
+    elif status_code == 302:
         pass
-    if status_code == 303:
+    elif status_code == 303:
         pass
-    if status_code == 304:
+    elif status_code == 304:
         pass
-    if status_code == 307:
+    elif status_code == 307:
         pass
-    if status_code == 308:
+    elif status_code == 308:
         pass
-    if status_code == 400:
+
+    #HTTP 400 Error Codes
+    elif status_code == 400:
         pass
-    if status_code == 401:
+    elif status_code == 401:
         pass
-    if status_code == 402:
+    elif status_code == 402:
         pass
-    if status_code == 403:
+    elif status_code == 403:
         pass
-    if status_code == 404:
+    elif status_code == 404:
         pass
-    if status_code == 405:
+    elif status_code == 405:
         pass
-    if status_code == 406:
+    elif status_code == 406:
         pass
-    if status_code == 407:
+    elif status_code == 407:
         pass
-    if status_code == 408:
+    elif status_code == 408:
         pass
-    if status_code == 409:
+    elif status_code == 409:
         pass
-    if status_code == 410:
+    elif status_code == 410:
         pass
-    if status_code == 411:
+    elif status_code == 411:
         pass
-    if status_code == 412:
+    elif status_code == 412:
         pass
-    if status_code == 413:
+    elif status_code == 413:
         pass
-    if status_code == 414:
+    elif status_code == 414:
         pass
-    if status_code == 415:
+    elif status_code == 415:
         pass
-    if status_code == 416:
+    elif status_code == 416:
         pass
-    if status_code == 417:
+    elif status_code == 417:
         pass
-    if status_code == 418:
+    elif status_code == 418:
         pass
-    if status_code == 421:
+    elif status_code == 421:
         pass
-    if status_code == 422:
+    elif status_code == 422:
         pass
-    if status_code == 423:
+    elif status_code == 423:
         pass
-    if status_code == 424:
+    elif status_code == 424:
         pass
-    if status_code == 425:
+    elif status_code == 425:
         pass
-    if status_code == 426:
+    elif status_code == 426:
         pass
-    if status_code == 428:
+    elif status_code == 428:
         pass
-    if status_code == 429:
+    elif status_code == 429:
         pass
-    if status_code == 431:
+    elif status_code == 431:
         pass
-    if status_code == 451:
+    elif status_code == 451:
         pass
-    if status_code == 500:
+
+    # HTTP 500 Error Codes
+    elif status_code == 500:
         pass
-    if status_code == 501:
+    elif status_code == 501:
         pass
-    if status_code == 502:
+    elif status_code == 502:
         pass
-    if status_code == 503:
+    elif status_code == 503:
         pass
-    if status_code == 504:
+    elif status_code == 504:
         pass
-    if status_code == 505:
+    elif status_code == 505:
         pass
-    if status_code == 506:
+    elif status_code == 506:
         pass
-    if status_code == 507:
+    elif status_code == 507:
         pass
-    if status_code == 508:
+    elif status_code == 508:
         pass
-    if status_code == 510:
+    elif status_code == 510:
         pass
-    if status_code == 511:
+    elif status_code == 511:
         pass
-    if status_code == -32700:
+
+    #MCP Server Error Codes
+    elif status_code == -32700:
         pass
-    if status_code == -32600:
+    elif status_code == -32600:
         pass
-    if status_code == -32601:
+    elif status_code == -32601:
         pass
-    if status_code == -32602:
+    elif status_code == -32602:
         pass
-    if status_code == -32603:
+    elif status_code == -32603:
         pass
-    if status_code == -32000 or -32099:
+    elif -32099 <= status_code <= -32000:
+        pass
 
